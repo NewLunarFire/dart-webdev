@@ -1,11 +1,14 @@
 import 'dart:html';
 
-var a1 = [{
+var tasks = [{
   "id": "TEST-1",
   "title": "Do something cool"
 }, {
   "id": "TEST-2",
   "title": "Do something even cooler"  
+}, {
+  "id": "TEST-3",
+  "title": "Hide the pain"  
 }];
 
 DivElement createCard(String id, String name)
@@ -28,6 +31,7 @@ DivElement createCard(String id, String name)
 }
 
 void onDragStart(MouseEvent event) {
+  print(event.target);
   event.dataTransfer.setData("text", (event.target as Element).id);
 }
 
@@ -38,17 +42,18 @@ void onDrop(MouseEvent event) {
 
   var id = event.dataTransfer.getData("text");
   var card = querySelector("#${id}");
+  
   (event.target as Element).append(card);
 }
 
 void main() { 
-  var pane1 = querySelector("#pane1");
-  var pane2 = querySelector("#pane2");
+  for (var task in tasks)
+    querySelector("#pane1").children.add(createCard(task["id"], task["title"]));
 
-  pane1.onDragStart.listen(onDragStart);
-  pane2.onDragOver.listen(allowDrop);
-  pane2.onDrop.listen(onDrop);
+  var cards = querySelectorAll(".card");
+  var panes = querySelectorAll(".pane");
 
-  for (var task in a1)
-    pane1.children.add(createCard(task["id"], task["title"]));
+  cards.onDragStart.listen(onDragStart);
+  panes.onDragOver.listen(allowDrop);
+  panes.onDrop.listen(onDrop);
 }
