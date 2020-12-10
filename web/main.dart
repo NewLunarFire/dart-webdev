@@ -12,6 +12,7 @@ DivElement createCard(String id, String name)
 {
   var div = Element.div();
   div.classes.add("card");
+  div.id = "card-${id}";
   div.attributes.addAll({"draggable": "true"});
 
   var elTitle = Element.div();
@@ -26,8 +27,28 @@ DivElement createCard(String id, String name)
   return div;
 }
 
+void onDragStart(MouseEvent event) {
+  event.dataTransfer.setData("text", (event.target as Element).id);
+}
+
+void allowDrop(MouseEvent event) => event.preventDefault();
+
+void onDrop(MouseEvent event) {
+  event.preventDefault();
+
+  var id = event.dataTransfer.getData("text");
+  var card = querySelector("#${id}");
+  (event.target as Element).append(card);
+}
+
 void main() { 
-  var body = querySelector("body");
+  var pane1 = querySelector("#pane1");
+  var pane2 = querySelector("#pane2");
+
+  pane1.onDragStart.listen(onDragStart);
+  pane2.onDragOver.listen(allowDrop);
+  pane2.onDrop.listen(onDrop);
+
   for (var task in a1)
-    body.children.add(createCard(task["id"], task["title"]));
+    pane1.children.add(createCard(task["id"], task["title"]));
 }

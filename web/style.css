@@ -14,3 +14,9 @@
 .card-name {
     font-size: 20px;
 }
+
+#pane1, #pane2
+{
+    border: 1px solid black;
+    height: 200px;
+}
