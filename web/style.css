@@ -15,11 +15,26 @@
     font-size: 20px;
 }
 
+.card-points {
+    text-align: right;
+}
+
 .pane
 {
     border: 1px solid black;
-    height: 100px;
+    
+}
+
+.pane-flow
+{
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    height: 100px;
+}
+
+.pane-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
