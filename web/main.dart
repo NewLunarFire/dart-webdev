@@ -72,15 +72,35 @@ void onDrop(MouseEvent event) {
   target.append(card);
 }
 
-void main() {
+void onCreateTask(MouseEvent event) {
+  var elIdField = querySelector("#task-id-field") as TextInputElement;
+  var elTitleField = querySelector("#task-title-field") as TextInputElement;
+  var elPointsField = querySelector("#task-points-field") as NumberInputElement;
+
+  var id = elIdField.value;
+  var title = elTitleField.value;
+  var points = elPointsField.valueAsNumber;
+
+  var task = Task(id, title, points);
+
+  addTaskCardToFirstPane(task);
+
+  elIdField.value = '';
+  elTitleField.value = '';
+  elPointsField.value = '1';
+}
+
+void addTaskCardToFirstPane(Task task) {
   var pane1 = querySelector("#pane1").querySelector(".pane-flow");
 
-  tasks.forEach((task) {
-    pane1.children.add(createCard(task));
-    points[0] += task.points;
-  });
+  pane1.children.add(createCard(task));
+  points[0] += task.points;
 
   pane1.parent.querySelector(".pane-points").text = "${points[0]} points";
+}
+
+void main() {
+  tasks.forEach(addTaskCardToFirstPane);
 
   var cards = querySelectorAll(".card");
   var panes = querySelectorAll(".pane");
@@ -88,4 +108,7 @@ void main() {
   cards.onDragStart.listen(onDragStart);
   panes.onDragOver.listen(allowDrop);
   panes.onDrop.listen(onDrop);
+
+  var createTaskButton = querySelector("#task-create-button");
+  createTaskButton.onClick.listen(onCreateTask);
 }

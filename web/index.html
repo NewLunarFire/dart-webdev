@@ -25,5 +25,16 @@
             <div class="pane-header"><h1 class="pane-title">Pane 4</h1><h3 class="pane-points">0 points</h3></div>
             <div data-pane-index="3" class="pane-flow"></div>
         </div>
+        <h1>Create or Import Tasks</h1>
+        <div class="task-form">
+            <label class="task-form-label">ID</label>
+            <input class="task-form-text-field" id="task-id-field" placeholder="Task 123"/>
+            <label class="task-form-label">Title</label>
+            <input class="task-form-text-field" id="task-title-field" placeholder="Do something great"/>
+            <label class="task-form-label">Points</label>
+            <input class="task-form-number-field" id="task-points-field" type="number" value="1" min="1" max="13"/>
+            <button class="task-form-button" id="task-create-button">Create</button>
+            <button class="task-form-button" id="task-import-button" disabled="true">Import from CSV</button>
+        </div>
     </body>
 </html>

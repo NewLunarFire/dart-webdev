@@ -38,3 +38,24 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.task-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.task-form-label {
+
+}
+
+.task-form-button {
+    
+}
+
+.task-form-text-field {
+
+}
+
+.task-form-number-field {
+
+}
