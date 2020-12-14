@@ -36,6 +36,7 @@ DivElement createCard(Task task) {
   elPoints.text = "${task.points}";
 
   div.children.addAll([elTitle, elName, elPoints]);
+  div.onDragStart.listen(onDragStart);
   return div;
 }
 
@@ -102,10 +103,7 @@ void addTaskCardToFirstPane(Task task) {
 void main() {
   tasks.forEach(addTaskCardToFirstPane);
 
-  var cards = querySelectorAll(".card");
   var panes = querySelectorAll(".pane");
-
-  cards.onDragStart.listen(onDragStart);
   panes.onDragOver.listen(allowDrop);
   panes.onDrop.listen(onDrop);
 
