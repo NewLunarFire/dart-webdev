@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:html';
 
 class Task {
@@ -6,14 +7,20 @@ class Task {
   final int points;
 
   Task(this.id, this.title, this.points) {}
+
+  Task.fromJson(Map<String, dynamic> json):
+    id = json['id'],
+    title = json['title'],
+    points = json['points'];
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'points': points
+  };
 }
 
-var tasks = [
-  Task("TEST-1", "Do something cool", 1),
-  Task("TEST-2", "Do something even cooler", 3),
-  Task("TEST-3", "Hide the pain", 5)
-];
-
+List<Task> tasks = List.empty(growable: true);
 var points = [0, 0, 0, 0];
 
 DivElement createCard(Task task) {
@@ -25,7 +32,12 @@ DivElement createCard(Task task) {
 
   var elTitle = Element.div();
   elTitle.classes.add("card-title");
-  elTitle.text = task.id;
+  var spanTitle = Element.span();
+  spanTitle.text = task.id;
+  var closeButton = ButtonElement();
+  closeButton.text = "X";
+  closeButton.onClick.listen((event) => removeCard(div, task));
+  elTitle.children.addAll([spanTitle, closeButton]);
 
   var elName = Element.div();
   elName.classes.add("card-name");
@@ -38,6 +50,14 @@ DivElement createCard(Task task) {
   div.children.addAll([elTitle, elName, elPoints]);
   div.onDragStart.listen(onDragStart);
   return div;
+}
+
+void removeCard(Element card, Task task) {
+  changePoints(int.parse(card.parent.getAttribute("data-pane-index")), -task.points);
+
+  querySelector("#card-${task.id}").remove();
+  tasks.remove(task);
+  saveTasks();
 }
 
 void onDragStart(MouseEvent event) {
@@ -57,20 +77,19 @@ void onDrop(MouseEvent event) {
   while (!target.classes.contains("pane")) target = target.parent;
   target = target.querySelector(".pane-flow");
 
-  var origPaneIndex = int.parse(card.parent.getAttribute("data-pane-index"));
-  var paneIndex = int.parse(target.getAttribute("data-pane-index"));
   var cardPoints = int.parse(card.getAttribute("data-points"));
-  points[origPaneIndex] -= cardPoints;
-  points[paneIndex] += cardPoints;
-
-  querySelector("#pane${paneIndex + 1}").querySelector(".pane-points").text =
-      "${points[paneIndex]} points";
-
-  querySelector("#pane${origPaneIndex + 1}")
-      .querySelector(".pane-points")
-      .text = "${points[origPaneIndex]} points";
+  changePoints(int.parse(card.parent.getAttribute("data-pane-index")), -cardPoints);
+  changePoints(int.parse(target.getAttribute("data-pane-index")), cardPoints);
 
   target.append(card);
+}
+
+void changePoints(int index, int delta)
+{
+  points[index] += delta;
+  querySelector("#pane${index + 1}")
+    .querySelector(".pane-points")
+    .text = "${points[index]} points";
 }
 
 void onCreateTask(MouseEvent event) {
@@ -84,6 +103,8 @@ void onCreateTask(MouseEvent event) {
 
   var task = Task(id, title, points);
 
+  tasks.add(task);
+  saveTasks();
   addTaskCardToFirstPane(task);
 
   elIdField.value = '';
@@ -100,7 +121,18 @@ void addTaskCardToFirstPane(Task task) {
   pane1.parent.querySelector(".pane-points").text = "${points[0]} points";
 }
 
+void saveTasks()
+{
+  window.localStorage["tasks"] = jsonEncode(tasks);
+}
+
 void main() {
+  // Load tasks from localStorage
+  var storedTasks = jsonDecode(window.localStorage["tasks"]);
+
+  if(storedTasks is List)
+    (storedTasks).map((json) => Task.fromJson(json)).forEach(tasks.add);
+
   tasks.forEach(addTaskCardToFirstPane);
 
   var panes = querySelectorAll(".pane");
