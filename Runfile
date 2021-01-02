@@ -1,0 +1,3 @@
+install=bash install.sh
+serve=webdev serve
+serve2=well serve
