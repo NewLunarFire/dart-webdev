@@ -72,3 +72,31 @@
 .task-form-number-field {
 
 }
+
+.flex-row {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}
+
+.edit-button {
+    border-radius: 50%;
+    width: 37px;
+    height: 37px;
+    border: 0;
+    background-color: white;
+    margin-left: 10px;
+}
+
+.edit-button:hover {
+    background-color: lightgray;
+}
+
+.hidden {
+    display: none;
+}
+
+.center {
+    margin: auto;
+    width: max-content;
+}

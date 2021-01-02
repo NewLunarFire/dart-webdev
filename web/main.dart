@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:html';
 
+import 'title.dart';
+
 class Task {
   final String id;
   final String title;
@@ -126,14 +128,23 @@ void saveTasks()
   window.localStorage["tasks"] = jsonEncode(tasks);
 }
 
-void main() {
-  // Load tasks from localStorage
-  var storedTasks = jsonDecode(window.localStorage["tasks"]);
+void loadTasks()
+{
+  if(window.localStorage["tasks"] != null)
+  {
+    // Load tasks from localStorage
+    var storedTasks = jsonDecode(window.localStorage["tasks"]);
 
-  if(storedTasks is List)
-    (storedTasks).map((json) => Task.fromJson(json)).forEach(tasks.add);
+    if(storedTasks is List)
+      (storedTasks).map((json) => Task.fromJson(json)).forEach(tasks.add);
+  }
 
   tasks.forEach(addTaskCardToFirstPane);
+}
+
+void main() {
+  loadTasks();
+  loadTitle();
 
   var panes = querySelectorAll(".pane");
   panes.onDragOver.listen(allowDrop);
@@ -141,4 +152,6 @@ void main() {
 
   var createTaskButton = querySelector("#task-create-button");
   createTaskButton.onClick.listen(onCreateTask);
+
+  bindTitle();
 }

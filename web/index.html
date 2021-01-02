@@ -8,7 +8,12 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <h1>Planning</h1>
+        <div class="flex-row center">
+            <h1 id="title"></h1>
+            <input id="title-edit-box" type="text" class="hidden" />
+            <button id="title-edit-button" class="edit-button">&#x270F;&#xFE0F;</button>
+            </button>
+        </div>
         <div class="pane" id="pane1">
             <div class="pane-header"><h1 class="pane-title">Pane 1</h1><h3 class="pane-points">0 points</h3></div>
             <div data-pane-index="0" class="pane-flow"></div>
